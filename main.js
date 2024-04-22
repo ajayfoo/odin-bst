@@ -37,10 +37,6 @@ const buildTreeFromArray = (arr, start, end) => {
   if (end - start < 0) return null;
   if (end - start === 0) return createNode(arr[start]);
   const mid = Math.floor((start + end) / 2);
-  if (arr[mid] === undefined) {
-    console.log("arr: " + arr);
-    console.log("mid: ", mid);
-  }
   const node = createNode(arr[mid]);
   node.left = buildTreeFromArray(arr, start, mid - 1);
   node.right = buildTreeFromArray(arr, mid + 1, end);
@@ -66,12 +62,12 @@ const createTree = (arr = null) => {
     sortAndRemoveDuplicates(arr);
     root = buildTreeFromArray(arr, 0, arr.length - 1);
   }
-  const insert = (value, node) => {
-    if (node === null) return createNode(value);
-    if (value < node.value) {
-      node.left = insert(value, node.left);
+  const insert = (data, node) => {
+    if (node === null) return createNode(data);
+    if (data < node.data) {
+      node.left = insert(data, node.left);
     } else {
-      node.right = insert(value, node.right);
+      node.right = insert(data, node.right);
     }
     return node;
   };
