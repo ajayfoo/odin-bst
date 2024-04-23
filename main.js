@@ -1,4 +1,5 @@
 const util = require("util");
+const { makeQueue } = require("./queue.js");
 
 const createNode = (data_, left_ = null, right_ = null) => {
   const data = data_;
@@ -114,15 +115,25 @@ const createTree = (arr = null) => {
     return node;
   };
 
+  const leverOrder = () => {
+    const queue = makeQueue();
+    queue.enqueue(root);
+    while (!queue.isEmpty()) {
+      const node = queue.dequeue();
+      console.log(node.data);
+      if (node.left !== null) queue.enqueue(node.left);
+      if (node.right !== null) queue.enqueue(node.right);
+    }
+  };
   const getRoot = () => root;
-  return { insert, prettyPrint, getRoot, remove, print, find };
+  return { insert, prettyPrint, getRoot, remove, print, find, leverOrder };
 };
 
 const testTree = () => {
   const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
   const tree = createTree(arr);
-  const node = tree.find(6345);
-  console.log(node);
+  tree.prettyPrint();
+  tree.leverOrder();
 };
 
 testTree();
