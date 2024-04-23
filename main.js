@@ -125,15 +125,39 @@ const createTree = (arr = null) => {
       if (node.right !== null) queue.enqueue(node.right);
     }
   };
+
+  const levelOrderRecursively = (queue = null) => {
+    if (queue !== null && queue.isEmpty()) return;
+    if (queue === null) {
+      queue = makeQueue();
+      if (root !== null) queue.enqueue(root);
+      levelOrderRecursively(queue);
+    } else {
+      const node = queue.dequeue();
+      console.log(node.data);
+      if (node.left !== null) queue.enqueue(node.left);
+      if (node.right !== null) queue.enqueue(node.right);
+      levelOrderRecursively(queue);
+    }
+  };
   const getRoot = () => root;
-  return { insert, prettyPrint, getRoot, remove, print, find, leverOrder };
+  return {
+    insert,
+    prettyPrint,
+    getRoot,
+    remove,
+    print,
+    find,
+    leverOrder,
+    levelOrderRecursively,
+  };
 };
 
 const testTree = () => {
   const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
   const tree = createTree(arr);
   tree.prettyPrint();
-  tree.leverOrder();
+  tree.levelOrderRecursively();
 };
 
 testTree();
