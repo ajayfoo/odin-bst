@@ -97,27 +97,32 @@ const createTree = (arr = null) => {
     if (data < node.data) node.left = remove(data, node.left);
     else if (data > node.data) node.right = remove(data, node.right);
     else {
-      if (node.left === null && node.right === null) return null;
-      else if (node.left === null) return node.right;
+      if (node.left === null && node.right === null) {
+        if (node === root) root = null;
+        return null;
+      } else if (node.left === null) return node.right;
       else if (node.right === null) return node.left;
       else return shift(node.left, node.right);
     }
     return node;
   };
 
+  const find = (data, node = root) => {
+    if (node === null) return null;
+    if (data < node.data) return find(data, node.left);
+    if (data > node.data) return find(data, node.right);
+    return node;
+  };
+
   const getRoot = () => root;
-  return { insert, prettyPrint, getRoot, remove, print };
+  return { insert, prettyPrint, getRoot, remove, print, find };
 };
 
 const testTree = () => {
   const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
   const tree = createTree(arr);
-  tree.insert(99);
-  tree.prettyPrint();
-  tree.remove(67);
-  tree.prettyPrint();
-  tree.remove(324);
-  tree.prettyPrint();
+  const node = tree.find(6345);
+  console.log(node);
 };
 
 testTree();
