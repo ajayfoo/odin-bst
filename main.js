@@ -44,6 +44,7 @@ const buildTreeFromArray = (arr, start, end) => {
   return node;
 };
 
+const getRoot = () => root;
 const prettyPrint = (node, prefix = "", isLeft = true) => {
   if (node === null) {
     return;
@@ -115,32 +116,64 @@ const createTree = (arr = null) => {
     return node;
   };
 
-  const leverOrder = () => {
+  const levelOrder = (callback = null) => {
     const queue = makeQueue();
     queue.enqueue(root);
+    const values = [];
     while (!queue.isEmpty()) {
       const node = queue.dequeue();
-      console.log(node.data);
+      if (callback !== null) callback(node);
+      else values.push(node.data);
       if (node.left !== null) queue.enqueue(node.left);
       if (node.right !== null) queue.enqueue(node.right);
     }
+    if (callback === null) return values;
   };
 
-  const levelOrderRecursively = (queue = null) => {
-    if (queue !== null && queue.isEmpty()) return;
+  const levelOrderRecursively = (callback = null, queue = null, arr = []) => {
+    if (queue !== null && queue.isEmpty()) {
+      if (callback === null) return arr;
+      return;
+    }
     if (queue === null) {
       queue = makeQueue();
       if (root !== null) queue.enqueue(root);
-      levelOrderRecursively(queue);
+      return levelOrderRecursively(callback, queue, arr);
     } else {
       const node = queue.dequeue();
-      console.log(node.data);
+      if (callback !== null) callback(node);
+      else arr.push(node.data);
       if (node.left !== null) queue.enqueue(node.left);
       if (node.right !== null) queue.enqueue(node.right);
-      levelOrderRecursively(queue);
+      return levelOrderRecursively(callback, queue, arr);
     }
   };
-  const getRoot = () => root;
+  const preOrder = (callback = null, node = root, arr = []) => {
+    if (node === null) return arr;
+    if (callback !== null) callback(node);
+    else arr.push(node.data);
+    preOrder(callback, node.left, arr);
+    preOrder(callback, node.right, arr);
+    return arr;
+  };
+
+  const inOrder = (callback = null, node = root, arr = []) => {
+    if (node === null) return arr;
+    inOrder(callback, node.left, arr);
+    if (callback !== null) callback(node);
+    else arr.push(node.data);
+    inOrder(callback, node.right, arr);
+    return arr;
+  };
+
+  const postOrder = (callback = null, node = root, arr = []) => {
+    if (node === null) return arr;
+    postOrder(callback, node.left, arr);
+    postOrder(callback, node.right, arr);
+    if (callback !== null) callback(node);
+    else arr.push(node.data);
+    return arr;
+  };
   return {
     insert,
     prettyPrint,
@@ -148,8 +181,11 @@ const createTree = (arr = null) => {
     remove,
     print,
     find,
-    leverOrder,
+    levelOrder,
     levelOrderRecursively,
+    preOrder,
+    inOrder,
+    postOrder,
   };
 };
 
@@ -157,7 +193,15 @@ const testTree = () => {
   const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
   const tree = createTree(arr);
   tree.prettyPrint();
-  tree.levelOrderRecursively();
+  console.log(tree.preOrder());
+  console.log(tree.inOrder());
+  console.log(tree.postOrder());
+  // console.log("Preorder:-");
+  // tree.preOrder();
+  // console.log("Inorder:-");
+  // tree.inOrder();
+  // console.log("Postorder");
+  // tree.postOrder();
 };
 
 testTree();
