@@ -174,6 +174,14 @@ const createTree = (arr = null) => {
     else arr.push(node.data);
     return arr;
   };
+
+  const height = (node = root) => {
+    if (node === null) return -1;
+    if (node.left === null && node.right === null) return 0;
+    const leftHeight = height(node.left);
+    const rightHeight = height(node.right);
+    return 1 + Math.max(leftHeight, rightHeight);
+  };
   return {
     insert,
     prettyPrint,
@@ -186,6 +194,7 @@ const createTree = (arr = null) => {
     preOrder,
     inOrder,
     postOrder,
+    height,
   };
 };
 
@@ -193,15 +202,7 @@ const testTree = () => {
   const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
   const tree = createTree(arr);
   tree.prettyPrint();
-  console.log(tree.preOrder());
-  console.log(tree.inOrder());
-  console.log(tree.postOrder());
-  // console.log("Preorder:-");
-  // tree.preOrder();
-  // console.log("Inorder:-");
-  // tree.inOrder();
-  // console.log("Postorder");
-  // tree.postOrder();
+  console.log(tree.height());
 };
 
 testTree();
