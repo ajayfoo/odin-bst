@@ -62,16 +62,10 @@ const createTree = (arr = null) => {
     sortAndRemoveDuplicates(arr);
     root = buildTreeFromArray(arr, 0, arr.length - 1);
   }
-  const insert = (data, node) => {
-    if (node === null) return createNode(data);
-    if (data < node.data) {
-      node.left = insert(data, node.left);
-    } else {
-      node.right = insert(data, node.right);
-    }
-    return node;
+  const print = (node = root) => {
+    console.log(util.inspect(node, false, null, true));
   };
-  const prettyPrint = (node, prefix = "", isLeft = true) => {
+  const prettyPrint = (node = root, prefix = "", isLeft = true) => {
     if (node === null) {
       return;
     }
@@ -83,17 +77,47 @@ const createTree = (arr = null) => {
       prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
     }
   };
-  const getRoot = () => root;
+  const insert = (data, node = root) => {
+    if (node === null) return createNode(data);
+    if (data < node.data) {
+      node.left = insert(data, node.left);
+    } else {
+      node.right = insert(data, node.right);
+    }
+    return node;
+  };
+  const shift = (left, right) => {
+    if (right.left === null) right.left = left;
+    else right.left = shift(left, right.left);
+    return right;
+  };
 
-  return { insert, prettyPrint, getRoot };
+  const remove = (data, node = root) => {
+    if (node === null) return null;
+    if (data < node.data) node.left = remove(data, node.left);
+    else if (data > node.data) node.right = remove(data, node.right);
+    else {
+      if (node.left === null && node.right === null) return null;
+      else if (node.left === null) return node.right;
+      else if (node.right === null) return node.left;
+      else return shift(node.left, node.right);
+    }
+    return node;
+  };
+
+  const getRoot = () => root;
+  return { insert, prettyPrint, getRoot, remove, print };
 };
 
 const testTree = () => {
   const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
   const tree = createTree(arr);
-  tree.prettyPrint(tree.getRoot());
-  tree.insert(99, tree.getRoot());
-  tree.prettyPrint(tree.getRoot());
+  tree.insert(99);
+  tree.prettyPrint();
+  tree.remove(67);
+  tree.prettyPrint();
+  tree.remove(324);
+  tree.prettyPrint();
 };
 
 testTree();
