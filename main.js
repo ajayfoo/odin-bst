@@ -195,6 +195,20 @@ const createTree = (arr = null) => {
     if (heightDiff > 1) return false;
     return isBalanced(node.left) && isBalanced(node.right);
   };
+
+  const rebalance = () => {
+    if (isBalanced(root)) return;
+    const arr = inOrder();
+    root = buildTreeFromArray(arr, 0, arr.length - 1);
+  };
+
+  /*
+  Balance()
+  1. Identify the unbalanced subtree
+  2. Identify which branch in has the greatest height (left or right).
+  3. 
+  */
+
   return {
     insert,
     prettyPrint,
@@ -210,6 +224,7 @@ const createTree = (arr = null) => {
     height,
     depth,
     isBalanced,
+    rebalance,
   };
 };
 
@@ -217,13 +232,13 @@ const testTree = () => {
   const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
   const tree = createTree(arr);
   tree.prettyPrint();
+  tree.insert(325);
+  tree.insert(326);
+  tree.insert(327);
+  tree.insert(328);
+  tree.prettyPrint();
   console.log(tree.isBalanced());
-  tree.insert(-1);
-  tree.insert(-2);
-  tree.insert(-3);
-  tree.insert(6346);
-  tree.insert(6347);
-  tree.insert(6348);
+  tree.rebalance();
   tree.prettyPrint();
   console.log(tree.isBalanced());
 };
