@@ -44,7 +44,6 @@ const buildTreeFromArray = (arr, start, end) => {
   return node;
 };
 
-const getRoot = () => root;
 const prettyPrint = (node, prefix = "", isLeft = true) => {
   if (node === null) {
     return;
@@ -64,6 +63,7 @@ const createTree = (arr = null) => {
     sortAndRemoveDuplicates(arr);
     root = buildTreeFromArray(arr, 0, arr.length - 1);
   }
+  const getRoot = () => root;
   const print = (node = root) => {
     console.log(util.inspect(node, false, null, true));
   };
@@ -182,6 +182,12 @@ const createTree = (arr = null) => {
     const rightHeight = height(node.right);
     return 1 + Math.max(leftHeight, rightHeight);
   };
+  const depth = (target, node = root, d = 0) => {
+    if (target === null || node === null) return -1;
+    if (target.data < node.data) return depth(target, node.left, d + 1);
+    if (target.data > node.data) return depth(target, node.right, d + 1);
+    else return d;
+  };
   return {
     insert,
     prettyPrint,
@@ -195,6 +201,7 @@ const createTree = (arr = null) => {
     inOrder,
     postOrder,
     height,
+    depth,
   };
 };
 
@@ -202,7 +209,7 @@ const testTree = () => {
   const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
   const tree = createTree(arr);
   tree.prettyPrint();
-  console.log(tree.height());
+  console.log(tree.depth(tree.find(999)));
 };
 
 testTree();
