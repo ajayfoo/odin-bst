@@ -188,6 +188,11 @@ const createTree = (arr = null) => {
     if (target.data > node.data) return depth(target, node.right, d + 1);
     else return d;
   };
+
+  const isBalanced = () => {
+    if (root === null) return true;
+    return Math.abs(height(root.left) - height(root.right)) <= 1;
+  };
   return {
     insert,
     prettyPrint,
@@ -202,6 +207,7 @@ const createTree = (arr = null) => {
     postOrder,
     height,
     depth,
+    isBalanced,
   };
 };
 
@@ -209,7 +215,11 @@ const testTree = () => {
   const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
   const tree = createTree(arr);
   tree.prettyPrint();
-  console.log(tree.depth(tree.find(999)));
+  console.log(tree.isBalanced());
+  tree.insert(6444);
+  tree.insert(6445);
+  tree.prettyPrint();
+  console.log(tree.isBalanced());
 };
 
 testTree();
