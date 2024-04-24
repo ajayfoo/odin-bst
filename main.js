@@ -19,8 +19,13 @@ const removeNulls = (sortedArr) => {
 };
 
 const sortAndRemoveDuplicates = (arr) => {
+  const predicate = (a, b) => {
+    if (a === null) return -1;
+    if (b === null) return 1;
+    return a - b;
+  };
   if (arr === null) return null;
-  arr.sort((a, b) => a - b);
+  arr.sort(predicate);
   let first = 0;
   for (let i = 1; i < arr.length; i += 1) {
     if (arr[i] === arr[first]) {
@@ -29,8 +34,16 @@ const sortAndRemoveDuplicates = (arr) => {
     }
     first = i;
   }
-  arr.sort((a, b) => a - b);
+  arr.sort(predicate);
   removeNulls(arr);
+  return arr;
+};
+
+const getNRandomIntegers = (n, maxNum) => {
+  const arr = new Array(n);
+  for (let i = 0; i < n; i += 1) {
+    arr[i] = Math.round(Math.random() * maxNum);
+  }
   return arr;
 };
 
@@ -80,6 +93,7 @@ const createTree = (arr = null) => {
     }
   };
   const insert = (data, node = root) => {
+    if (node === root && find(data) !== null) return;
     if (node === null) return createNode(data);
     if (data < node.data) {
       node.left = insert(data, node.left);
@@ -202,13 +216,6 @@ const createTree = (arr = null) => {
     root = buildTreeFromArray(arr, 0, arr.length - 1);
   };
 
-  /*
-  Balance()
-  1. Identify the unbalanced subtree
-  2. Identify which branch in has the greatest height (left or right).
-  3. 
-  */
-
   return {
     insert,
     prettyPrint,
@@ -229,18 +236,27 @@ const createTree = (arr = null) => {
 };
 
 const testTree = () => {
-  const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
-  const tree = createTree(arr);
+  const tree = createTree(getNRandomIntegers(10, 50));
   tree.prettyPrint();
-  tree.insert(325);
-  tree.insert(326);
-  tree.insert(327);
-  tree.insert(328);
+  console.log("Tree is balanced? " + tree.isBalanced());
+  console.log(tree.levelOrder());
+  console.log(tree.preOrder());
+  console.log(tree.inOrder());
+  console.log(tree.postOrder());
+  tree.insert(99);
+  tree.insert(101);
+  tree.insert(102);
+  tree.insert(103);
+  tree.insert(104);
   tree.prettyPrint();
-  console.log(tree.isBalanced());
+  console.log("Tree is balanced? " + tree.isBalanced());
   tree.rebalance();
   tree.prettyPrint();
-  console.log(tree.isBalanced());
+  console.log("Tree is balanced? " + tree.isBalanced());
+  console.log(tree.levelOrder());
+  console.log(tree.preOrder());
+  console.log(tree.inOrder());
+  console.log(tree.postOrder());
 };
 
 testTree();
