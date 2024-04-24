@@ -189,9 +189,11 @@ const createTree = (arr = null) => {
     else return d;
   };
 
-  const isBalanced = () => {
-    if (root === null) return true;
-    return Math.abs(height(root.left) - height(root.right)) <= 1;
+  const isBalanced = (node = root) => {
+    if (node === null) return true;
+    const heightDiff = Math.abs(height(node.left) - height(node.right));
+    if (heightDiff > 1) return false;
+    return isBalanced(node.left) && isBalanced(node.right);
   };
   return {
     insert,
@@ -216,8 +218,12 @@ const testTree = () => {
   const tree = createTree(arr);
   tree.prettyPrint();
   console.log(tree.isBalanced());
-  tree.insert(6444);
-  tree.insert(6445);
+  tree.insert(-1);
+  tree.insert(-2);
+  tree.insert(-3);
+  tree.insert(6346);
+  tree.insert(6347);
+  tree.insert(6348);
   tree.prettyPrint();
   console.log(tree.isBalanced());
 };
